@@ -189,7 +189,8 @@ td.bold{font-weight:600}
     <button class="acf" onclick="setACat('Youth A',this)">Youth A</button>
     <button class="acf" onclick="setACat('Youth B',this)">Youth B</button>
   </div>
-  <div style="margin-bottom:12px">
+  <div style="margin-bottom:12px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+    <button id="save-btn" class="btn" style="background:#4A7A5A" onclick="saveToFB()">✓ Хадгалагдсан</button>
     <button class="btn btn-gold" onclick="toggleAdd()">+ Гадаад тэмцэгч</button>
   </div>
   <div id="addform" style="display:none" class="af">
@@ -259,11 +260,21 @@ let r3ShowAll = false;
 
 function saveToFB() {
   set(dbRef, { students, nextId, updatedAt: Date.now() });
+  markSaved();
 }
 
 function upd(id, field, val) {
   const s = students.find(x => x.id === id);
-  if (s) { s[field] = val; saveToFB(); }
+  if (s) { s[field] = val; markUnsaved(); }
+}
+
+function markUnsaved() {
+  const btn = document.getElementById('save-btn');
+  if (btn) { btn.style.background = '#C0392B'; btn.textContent = '💾 Хадгалах (хадгалаагүй)'; }
+}
+function markSaved() {
+  const btn = document.getElementById('save-btn');
+  if (btn) { btn.style.background = '#4A7A5A'; btn.textContent = '✓ Хадгалагдсан'; }
 }
 
 function finalTotal(s) {
