@@ -513,6 +513,10 @@ window.addExt = function() {
 };
 
 // Firebase listener
+let initialized = false;
+let pendingUpdate = false;
+let updateTimer = null;
+
 onValue(dbRef, (snapshot) => {
   const data = snapshot.val();
   if (data && data.students) {
@@ -522,11 +526,22 @@ onValue(dbRef, (snapshot) => {
     students = SEED.map(s=>({...s}));
     saveToFB();
   }
-  // Show app
-  document.getElementById('loading').style.display = 'none';
-  document.getElementById('topnav').style.display = 'flex';
-  document.getElementById('parent-view').style.display = 'block';
-  renderCurrentView();
+
+  if (!initialized) {
+    // Анх нэг удаа л бүх дэлгэц харуулна
+    initialized = true;
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('topnav').style.display = 'flex';
+    document.getElementById('parent-view').style.display = 'block';
+    renderCurrentView();
+  } else {
+    // Дараагийн удаад: Admin горимд байвал renderAdmin дуудахгүй
+    // Зөвхөн Parent горимд байвал шинэчилнэ
+    if (currentView === 'parent') {
+      renderParent();
+    }
+    // Admin горимд байвал хэрэглэгч оруулж дуусах хүртэл хүлээнэ
+  }
 });
 </script>
 </body>
